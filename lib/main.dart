@@ -11,82 +11,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Twitter',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(title: 'Flutter Demo Home Page'),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const Home(title: "Twitter Home"),
+        "/profile": (context) => const Profile(),
+        "topics": (context) => const Topics(),
+      },
     );
   }
 }
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-// class Home extends StatelessWidget {
-//   const Home({super.key, required this.title});
-//   final String title;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(title),
-//       ),
-//       drawer: Drawer(),
-//       bottomNavigationBar:
-//           BottomNavigationBar(items: const <BottomNavigationBarItem>[
-//         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-//         BottomNavigationBarItem(
-//             icon: Icon(Icons.local_post_office), label: "Office")
-//       ]),
-//       body: const Center(child: Text("JH")),
-//     );
-//   }
-// }
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});
@@ -112,14 +49,14 @@ class _HomeState extends State<Home> {
     BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
   ];
 
-  static const List<Widget> screens = <Widget>[
-    Text(
+  static List<Widget> screens = <Widget>[
+    const Text(
       'Index 0: Home',
     ),
-    Text(
+    const Text(
       'Index 1: Office',
     ),
-    Text(
+    const Text(
       'Index 2: Profile',
     ),
   ];
@@ -127,8 +64,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      drawer: Drawer(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56), // 56 is default height
+        child: AppBarGlobal(title: "Profile"),
+      ),
+      drawer: const AppDrawerGlobal(),
       bottomNavigationBar: BottomNavigationBar(
         items: bottomTabs,
         currentIndex: selectedTabIndex,
@@ -138,5 +78,124 @@ class _HomeState extends State<Home> {
         child: screens.elementAt(selectedTabIndex),
       ),
     );
+  }
+}
+
+///Routes
+
+class Profile extends StatefulWidget {
+  const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56), // 56 is default height
+        child: AppBarGlobal(title: "Profile"),
+      ),
+      drawer: AppDrawerGlobal(),
+      body: Center(child: Text("Profile")),
+    );
+  }
+}
+
+class Topics extends StatefulWidget {
+  const Topics({super.key});
+
+  @override
+  State<Topics> createState() => TopicsState();
+}
+
+class TopicsState extends State<Topics> {
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56), // 56 is default height
+        child: AppBarGlobal(title: "Topics"),
+      ),
+      drawer: AppDrawerGlobal(),
+      body: Center(child: Text("Topics")),
+    );
+  }
+}
+
+class AppDrawerGlobal extends StatefulWidget {
+  const AppDrawerGlobal({super.key});
+
+  @override
+  State<AppDrawerGlobal> createState() => AppDrawerGlobalState();
+}
+
+class AppDrawerGlobalState extends State<AppDrawerGlobal> {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            child: Text("Drawer Header"),
+          ),
+          ListTile(
+            title: const Text("Profile"),
+            onTap: () {
+              Navigator.pushNamed(context, "/profile");
+            },
+          ),
+          ListTile(
+            title: const Text("Topics"),
+            onTap: () {
+              Navigator.pushNamed(context, "/profile");
+            },
+          ),
+          ListTile(
+            title: const Text("Bookmarks"),
+            onTap: () {
+              print("object");
+            },
+          ),
+          ListTile(
+            title: const Text("Lists"),
+            onTap: () {
+              print("object");
+            },
+          ),
+          ListTile(
+            title: const Text("Twitter Circle"),
+            onTap: () {
+              print("object");
+            },
+          ),
+          ListTile(
+            title: const Text("Logout"),
+            onTap: () {
+              print("object");
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AppBarGlobal extends StatefulWidget {
+  const AppBarGlobal({super.key, required this.title});
+  final String title;
+
+  @override
+  State<AppBarGlobal> createState() => _AppBarGlobalState();
+}
+
+class _AppBarGlobalState extends State<AppBarGlobal> {
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(title: Text(widget.title));
   }
 }
